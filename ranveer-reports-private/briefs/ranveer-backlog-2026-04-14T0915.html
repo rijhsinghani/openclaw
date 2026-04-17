@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="font-family:system-ui,sans-serif;font-size:16px;line-height:1.6;max-width:600px;margin:0 auto;padding:16px;">
+<h2 style="margin-bottom:4px;">🔍 Backlog Scan — 2026-04-14 09:15 ET</h2>
+<p><strong>Top proposal:</strong> Delete 4 stale branches (no open PRs, 14-16 days idle).</p>
+<h3>Stale Branches</h3>
+<table style="width:100%;border-collapse:collapse;font-size:14px;">
+<tr style="background:#f0f0f0;"><th style="text-align:left;padding:6px;">Repo</th><th style="text-align:left;padding:6px;">Branch</th><th style="text-align:left;padding:6px;">Idle</th></tr>
+<tr><td style="padding:6px;">booking app</td><td style="padding:6px;">fix/calendar-invite-spam</td><td style="padding:6px;">14 days</td></tr>
+<tr><td style="padding:6px;">booking app</td><td style="padding:6px;">ship/vault-fresh</td><td style="padding:6px;">16 days</td></tr>
+<tr><td style="padding:6px;">financial tracker</td><td style="padding:6px;">feat/coverage-ratchet-enforcement</td><td style="padding:6px;">16 days</td></tr>
+<tr><td style="padding:6px;">financial tracker</td><td style="padding:6px;">feat/initial-test-coverage</td><td style="padding:6px;">15 days</td></tr>
+</table>
+<h3>Stale TODOs (30+ days)</h3>
+<ul>
+<li><strong>financial tracker</strong> — <code>routers/performance.py</code> (61d), <code>scripts/import/import_paystub.py</code> (58d), <code>apps/bookkeeping/services/tax_projection_service.py</code> (35d)</li>
+</ul>
+<h3>Open PRs (0 approved)</h3>
+<ul>
+<li>booking app #678, #656</li>
+<li>financial tracker #263, #264, #265</li>
+</ul>
+<h3>Risk</h3>
+<p>Branch deletion: risk 1 (no code changes). Stale TODOs: risk 3 (touch business logic — report only).</p>
+</body>
+</html>
