@@ -1,0 +1,7 @@
+# Ignore Ranveer working directories
+agents/
+knowledge/
+memory/
+repos/
+tmp/
+ranveer-reports-private/
