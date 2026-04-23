@@ -31,11 +31,11 @@ This contract **overrides** the default one-approval-per-task contract for work 
 - **Large blast radius**: PRs > 10 files changed OR additions+deletions > 500 lines
 - **Cross-repo refactors**: changes touching > 1 repo in a single PR
 
-The exact regex lives in `src/ranveer-scope-guard.ts` (`isHardGateFile`). Pre-flight runs automatically from `agents/ranveer/scripts/autonomous-batch.sh`.
+The exact regex lives in `$HOME/.openclaw/src/ranveer-scope-guard.ts` (`isHardGateFile`). Pre-flight runs automatically from `$HOME/.openclaw/agents/ranveer/scripts/autonomous-batch.sh`.
 
 ## Session-level caps
 
-- **Max 3 autonomous merges / day** across all repos (resets 00:00 ET). Counted from `agents/ranveer/data/audit/ship-runs.jsonl` where `branch` starts with `ranveer/auto/` and `stage="merge"` and `status="success"`.
+- **Max 3 autonomous merges / day** across all repos (resets 00:00 ET). Counted from `$HOME/.openclaw/agents/ranveer/data/audit/ship-runs.jsonl` where `branch` starts with `ranveer/auto/` and `stage="merge"` and `status="success"`.
 - **Max 4 CodeRabbit escalation rounds per PR** — managed by the `cr-escalation-loop` skill (Codex×2 → Sonnet → Opus → abandon). Never force-merge past CR. Never ping Sameer for stuck PRs — the ladder handles it silently.
 - **Monthly spend cap** via the existing `governance.ts` per-persona budget.
 

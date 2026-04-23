@@ -19,11 +19,11 @@ Post a single end-of-day summary to `#code` so Sameer can review autonomous acti
 
 ## Data sources
 
-Read-only. All paths absolute from `$HOME`.
+Read-only. All paths are absolute under `$HOME/.openclaw/`. Always prefix with `$HOME/.openclaw/` or `~/.openclaw/` when reading — bare `agents/...` and bare `~/agents/...` both resolve to the wrong location.
 
-1. `agents/ranveer/data/audit/autonomous-runs.jsonl` — autonomous batch state transitions (this agent's audit).
-2. `agents/ranveer/data/audit/ship-runs.jsonl` — the canonical merge audit (written by `ship.sh`).
-3. Today's briefings directory: `ranveer-reports-private/briefs/ranveer-backlog-*.html`.
+1. `$HOME/.openclaw/agents/ranveer/data/audit/autonomous-runs.jsonl` — autonomous batch state transitions (this agent's audit).
+2. `$HOME/.openclaw/agents/ranveer/data/audit/ship-runs.jsonl` — the canonical merge audit (written by `ship.sh`).
+3. Today's briefings directory: `$HOME/.openclaw/ranveer-reports-private/briefs/ranveer-backlog-*.html`.
 
 Filter all records to today (America/New_York timezone, 00:00–23:59).
 
@@ -113,7 +113,7 @@ Keep total message ≤ 40 lines. If a section is empty, say `(none)` — except 
 - **Read-only** — never modify audit files, never create PRs.
 - **Single post per day** — check today's audit for an existing `{stage:"digest",status:"posted"}` row; skip if present.
 - **Never crash on malformed audit lines** — skip and continue.
-- **Respect autonomy flag** — read `jq -r '.enabled' agents/ranveer/autonomy.json`. If false, still post a minimal digest (`Autonomous mode off today`) so the cron watchdog sees it fired. NOTE: autonomy lives in this sidecar file, NOT in `openclaw.json`.
+- **Respect autonomy flag** — read `jq -r '.enabled' $HOME/.openclaw/agents/ranveer/autonomy.json`. If false, still post a minimal digest (`Autonomous mode off today`) so the cron watchdog sees it fired. NOTE: autonomy lives in this sidecar file, NOT in `openclaw.json`.
 
 ## OpenClaw pin-drift check (runs every digest)
 

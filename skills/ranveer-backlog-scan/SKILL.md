@@ -17,9 +17,17 @@ Discover the next-highest-value autonomous hardening task and post a briefing to
 - **Cron**: `ranveer-backlog-scan-am` (09:00 ET, Mon-Fri) and `ranveer-backlog-scan-pm` (15:00 ET, Mon-Fri)
 - **On demand**: Sameer asks "Ranveer, run backlog scan"
 
+## On-demand vs scheduled — two very different modes
+
+**Scheduled (cron-triggered: `ranveer-backlog-scan-am` / `-pm`)** — use the full protocol below: run the scan sequence, rank findings, emit the JSONL artifact to `~/.openclaw/agents/ranveer/data/audit/backlog-scan-<YYYY-MM-DD>.jsonl`, fire off proactive-cleanup.sh non-blocking, write the HTML brief, post the briefing to #code. This is the path that populates the artifact other tooling reads.
+
+**On-demand (user says "scan now" / "scan for tech debt" / "find dead code" / "audit this repo" / similar)** — BYPASS any cached-artifact logic. Do NOT read a prior `backlog-scan-*.jsonl` and report from it. Do NOT consult knowledge files first. Go straight to the target repo filesystem, invoke `Skill("dead-code-auditor")` fresh against that repo (or a narrower tool if the request is narrower — grep for TODOs, ast-grep for a pattern, etc.), and report findings inline in the same turn. A previously-written JSONL may be referenced as supplementary context to compare deltas ("this morning's scan flagged X, live code now shows Y"), but it is never the primary source. If the user's request is scoped to a specific repo or path, scope the fresh scan to match — don't widen it to all four repos just because the cron version does.
+
+The user's words: "when i ask him to scan for tech debt i want him to look at the underlying repository, duh." Artifacts are a cache, not a replacement for looking at the code.
+
 ## Preconditions (hard-gate — skip posting if any fail)
 
-1. `enabled` must be `true` in the sidecar config `agents/ranveer/autonomy.json`. Read via `jq -r '.enabled' agents/ranveer/autonomy.json`. If false (or file missing), log "autonomy disabled" and exit 0 without posting. NOTE: the autonomy config lives in this sidecar file, NOT in `openclaw.json` (the openclaw schema rejects the `autonomy` key on agents.list[N]).
+1. `enabled` must be `true` in the sidecar config `$HOME/.openclaw/agents/ranveer/autonomy.json`. Read via `jq -r '.enabled' $HOME/.openclaw/agents/ranveer/autonomy.json`. If false (or file missing), log "autonomy disabled" and exit 0 without posting. NOTE: the autonomy config lives in this sidecar file, NOT in `openclaw.json` (the openclaw schema rejects the `autonomy` key on agents.list[N]).
 2. An earlier briefing for today with no `ranveer go` reply still pending → skip (avoid double-posting).
 
 ## Scan sequence
@@ -101,12 +109,12 @@ Rules:
 
 - **Never edit files** — this skill is read-only. The autonomous build happens only after `ranveer go`.
 - **Never post if scope guard would escalate** — pre-check against `src/ranveer-scope-guard.ts` so briefings only surface work Ranveer could actually execute.
-- **Never bypass dryrun** — read `jq -r '.dryrun' agents/ranveer/autonomy.json`. If true, include `(dry-run)` in the briefing message so Sameer knows a `ranveer go` won't actually merge.
-- **Never double-post** — check `agents/ranveer/data/audit/autonomous-runs.jsonl` for an open briefing with no merge/escalation outcome since last post; if one exists, exit 0.
+- **Never bypass dryrun** — read `jq -r '.dryrun' $HOME/.openclaw/agents/ranveer/autonomy.json`. If true, include `(dry-run)` in the briefing message so Sameer knows a `ranveer go` won't actually merge.
+- **Never double-post** — check `$HOME/.openclaw/agents/ranveer/data/audit/autonomous-runs.jsonl` for an open briefing with no merge/escalation outcome since last post; if one exists, exit 0.
 
 ## Output contract
 
-On success: single Slack message posted, HTML brief written, audit row `{stage:"briefing",status:"posted",...}` appended to `agents/ranveer/data/audit/autonomous-runs.jsonl`.
+On success: single Slack message posted, HTML brief written, audit row `{stage:"briefing",status:"posted",...}` appended to `$HOME/.openclaw/agents/ranveer/data/audit/autonomous-runs.jsonl`.
 
 On backlog empty across all repos: post `Backlog empty across all repos. Standing by.` and exit 0.
 

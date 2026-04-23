@@ -2,7 +2,21 @@
   "mcpServers": {
     "supabase": {
       "type": "http",
-      "url": "https://mcp.supabase.com/mcp?project_ref=mggzcobnleqrprxegzac&read_only=true"
+      "transport": "streamable-http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=mggzcobnleqrprxegzac&read_only=true",
+      "headers": {
+        "Authorization": "Bearer ${SUPABASE_MCP_TOKEN}"
+      }
+    },
+    "firecrawl": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "firecrawl-mcp"
+      ],
+      "env": {
+        "FIRECRAWL_API_KEY": "fc-e6643f72c766481a9e27bc1d1f9deb98"
+      }
     },
     "n8n": {
       "command": "npx",
