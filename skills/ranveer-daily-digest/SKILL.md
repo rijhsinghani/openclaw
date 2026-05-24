@@ -1,11 +1,14 @@
 ---
 name: ranveer-daily-digest
-description: "End-of-day digest: summarize today's autonomous merges, any escalated/blocked PRs with reasons, and preview tomorrow's top-3 proposals from the next morning's backlog scan. Posts a single formatted Slack message to #code at 17:00 ET (cron: ranveer-daily-digest)."
+description: 'End-of-day digest: summarize today''s autonomous merges, any escalated/blocked PRs with reasons, and preview tomorrow''s top-3 proposals from the next morning''s backlog scan. Posts a single formatted Slack message to #code at 17:00 ET (cron: ranveer-daily-digest). Use when assembling Ranveer''s daily digest. Triggers include: ''ranveer daily digest'', ''daily digest'', ''ranveer end of day'', ''eod summary''.'
 metadata:
   openclaw:
-    emoji: "📋"
+    emoji: 📋
     requires:
-      bins: ["bash", "jq", "node"]
+      bins:
+      - bash
+      - jq
+      - node
 ---
 
 # Ranveer Daily Digest

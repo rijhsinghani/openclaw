@@ -1,11 +1,13 @@
 ---
 name: ranveer-attention-probe
-description: "Weekly self-test that measures how well Ranveer can recall rules from the top, middle, and tail of his own SOUL.md. Bundles 5 questions into one agent spawn, scores keyword presence, posts a tiered scorecard to #code. Alerts if any tier drops below 80% (signals attention decay / rule drift)."
+description: 'Weekly self-test that measures how well Ranveer can recall rules from the top, middle, and tail of his own SOUL.md. Bundles 5 questions into one agent spawn, scores keyword presence, posts a tiered scorecard to #code. Alerts if any tier drops below 80% (signals attention decay / rule drift). Use when invoked during Ranveer''s heartbeat cycle. Triggers include: ''ranveer attention probe'', ''ranveer idle cycle'', ''check what ranveer should do next'', ''ranveer attention''.'
 metadata:
   openclaw:
-    emoji: "🧠"
+    emoji: 🧠
     requires:
-      bins: ["bash", "python3"]
+      bins:
+      - bash
+      - python3
 ---
 
 # attention-probe — weekly recall self-test

@@ -1,11 +1,17 @@
 ---
 name: incident-digest
-description: "Post-incident learning. Given a session id or 'last', reads the transcript + dispatch logs, synthesizes what failed and why, and writes a durable principle note to ~/.openclaw/agents/ranveer/knowledge/principle/incident-<slug>-<date>.md using the When-to-apply / Principle / Evidence / Anti-pattern format. Also bumps the related curriculum domain priority in curriculum.yaml. Triggered by ranveer-watchdog on real failures or invoked on demand after an escalation."
+description: 'Post-incident learning. Given a session id or ''last'', reads the transcript + dispatch logs, synthesizes what failed and why, and writes a durable principle note to ~/.openclaw/agents/ranveer/knowledge/principle/incident-<slug>-<date>.md using the When-to-apply / Principle / Evidence / Anti-pattern format. Also bumps the related curriculum domain priority in curriculum.yaml. Triggered by ranveer-watchdog on real failures or invoked on demand after an escalation. Use when summarizing incidents into a digest. Triggers include: ''incident digest'', ''summarize the incidents'', ''what broke this week'', ''incident summary''.'
 metadata:
   openclaw:
-    emoji: "🩺"
+    emoji: 🩺
     requires:
-      bins: ["bash", "jq", "awk", "grep", "date", "python3"]
+      bins:
+      - bash
+      - jq
+      - awk
+      - grep
+      - date
+      - python3
 ---
 
 # incident-digest

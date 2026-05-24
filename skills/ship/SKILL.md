@@ -1,11 +1,14 @@
 ---
 name: ship
-description: "Ship code via ship.sh — the ONLY merge path. Invokes ~/.openclaw/agents/ranveer/scripts/ship.sh which owns push, PR creation, CodeRabbit polling, merge, audit, and Slack messaging. NEVER call gh pr create, gh pr merge, or git push directly."
+description: 'Ship code via ship.sh — the ONLY merge path. Invokes ~/.openclaw/agents/ranveer/scripts/ship.sh which owns push, PR creation, CodeRabbit polling, merge, audit, and Slack messaging. NEVER call gh pr create, gh pr merge, or git push directly. Use when shipping a finished change. Triggers include: ''ship this'', ''create a PR'', ''push for review'', ''get this merged'', ''commit and push''.'
 metadata:
   openclaw:
-    emoji: "🚀"
+    emoji: 🚀
     requires:
-      bins: ["bash", "gh", "jq"]
+      bins:
+      - bash
+      - gh
+      - jq
 ---
 
 # Ship — The Only Merge Path

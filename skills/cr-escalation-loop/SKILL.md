@@ -1,11 +1,15 @@
 ---
 name: cr-escalation-loop
-description: "Outer CodeRabbit autofix loop with model escalation. Replaces the flat cr-loop→cr-autofix→cr-loop chain. Manages round counting, tier selection (Codex→Sonnet→Opus→abandon), autonomy.json kill-switch, daily escalation cap, and state persistence per PR. Invoke this instead of calling cr-autofix directly after a ship.sh exit 20."
+description: 'Outer CodeRabbit autofix loop with model escalation. Replaces the flat cr-loop→cr-autofix→cr-loop chain. Manages round counting, tier selection (Codex→Sonnet→Opus→abandon), autonomy.json kill-switch, daily escalation cap, and state persistence per PR. Invoke this instead of calling cr-autofix directly after a ship.sh exit 20. Use when CodeRabbit comments need follow-up beyond a single autofix pass. Triggers include: ''cr escalation'', ''cr loop'', ''fix the cr comments'', ''address coderabbit feedback''.'
 metadata:
   openclaw:
-    emoji: "🪜"
+    emoji: 🪜
     requires:
-      bins: ["bash", "gh", "jq", "git"]
+      bins:
+      - bash
+      - gh
+      - jq
+      - git
 ---
 
 # cr-escalation-loop — CodeRabbit Autofix with Model Escalation

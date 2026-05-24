@@ -1,11 +1,13 @@
 ---
 name: run-ci
-description: "Run local CI checks before pushing or shipping. All checks you touch must pass. Pre-existing failures don't block you."
+description: 'Run local CI checks before pushing or shipping. All checks you touch must pass. Pre-existing failures don''t block you. Use when running the local CI gate before /ship. Triggers include: ''run ci'', ''local ci'', ''ci gate'', ''run the checks'', ''pre-ship ci''.'
 metadata:
   openclaw:
-    emoji: "✅"
+    emoji: ✅
     requires:
-      bins: ["pnpm", "ruff"]
+      bins:
+      - pnpm
+      - ruff
 ---
 
 # Run CI — Local Quality Checks

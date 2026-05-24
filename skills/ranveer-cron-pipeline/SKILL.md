@@ -1,11 +1,12 @@
 ---
 name: ranveer-cron-pipeline
-description: "Cron-triggered memo pipeline commands. When a message starts with 'CRON:', run the matching command EXACTLY — do not modify, summarize, or add commentary. Daily/weekly memo pipelines handle their own Slack delivery via post-memo.sh."
+description: 'Cron-triggered memo pipeline commands. When a message starts with ''CRON:'', run the matching command EXACTLY — do not modify, summarize, or add commentary. Daily/weekly memo pipelines handle their own Slack delivery via post-memo.sh. Use when working with Ranveer''s cron pipeline. Triggers include: ''ranveer cron pipeline'', ''cron pipeline'', ''ranveer scheduled jobs'', ''cron run''.'
 metadata:
   openclaw:
-    emoji: "⏰"
+    emoji: ⏰
     requires:
-      bins: ["bash"]
+      bins:
+      - bash
 ---
 
 # ranveer-cron-pipeline — CRON Command Routing

@@ -1,6 +1,6 @@
 ---
 name: frontend-polish
-description: Coordinates a brand/polish review for frontend components by delegating to Anisha (brand expert). Ranveer detects the trigger, asks Sameer for approval, packages the request, invokes Anisha, parses her brief, and dispatches approved changes to Codex.
+description: 'Coordinates a brand/polish review for frontend components by delegating to Anisha (brand expert). Ranveer detects the trigger, asks Sameer for approval, packages the request, invokes Anisha, parses her brief, and dispatches approved changes to Codex. Use when polishing frontend visuals after a fix. Triggers include: ''frontend polish'', ''polish the UI'', ''frontend pass'', ''visual cleanup''.'
 ---
 
 # Skill: frontend-polish

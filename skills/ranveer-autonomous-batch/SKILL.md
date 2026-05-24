@@ -1,11 +1,12 @@
 ---
 name: ranveer-autonomous-batch
-description: "The Autonomous Authority Contract — what you're allowed to do end-to-end after 'ranveer go', the hard-gate file patterns that ALWAYS require explicit approval (auth/stripe/secrets/migrations/deploys), session-level caps (3 merges/day, 2 CR rounds/PR), escape hatches, dry-run mode, and kill switch. Load this skill the moment you read 'ranveer go' or plan any autonomous lifecycle."
+description: 'The Autonomous Authority Contract — what you''re allowed to do end-to-end after ''ranveer go'', the hard-gate file patterns that ALWAYS require explicit approval (auth/stripe/secrets/migrations/deploys), session-level caps (3 merges/day, 2 CR rounds/PR), escape hatches, dry-run mode, and kill switch. Load this skill the moment you read ''ranveer go'' or plan any autonomous lifecycle. Use when running Ranveer''s autonomous batch loop on backlog items. Triggers include: ''ranveer autonomous batch'', ''ranveer batch'', ''run the autonomous loop'', ''autonomous batch''.'
 metadata:
   openclaw:
-    emoji: "🛡️"
+    emoji: 🛡️
     requires:
-      bins: ["bash"]
+      bins:
+      - bash
 ---
 
 # ranveer-autonomous-batch — Autonomous Authority Contract

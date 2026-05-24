@@ -1,11 +1,15 @@
 ---
 name: ranveer-consult-knowledge
-description: "Task-time retrieval over Ranveer's knowledge notes. Given task keywords, returns the top 1-3 relevant knowledge notes (with first 30 lines inline) so Ranveer can cite established principles before dispatching multi-file work, touching auth/payment/security code, or planning a refactor. Pure shell + grep, no LLM call, sub-second. Call at the START of any non-trivial task."
+description: 'Task-time retrieval over Ranveer''s knowledge notes. Given task keywords, returns the top 1-3 relevant knowledge notes (with first 30 lines inline) so Ranveer can cite established principles before dispatching multi-file work, touching auth/payment/security code, or planning a refactor. Pure shell + grep, no LLM call, sub-second. Call at the START of any non-trivial task. Use when answering anything that would benefit from Ranveer''s knowledge folder. Triggers include: ''consult ranveer knowledge'', ''ranveer knowledge'', ''what do we know about'', ''ranveer take on''.'
 metadata:
   openclaw:
-    emoji: "📚"
+    emoji: 📚
     requires:
-      bins: ["bash", "grep", "awk", "sort"]
+      bins:
+      - bash
+      - grep
+      - awk
+      - sort
 ---
 
 # consult-knowledge

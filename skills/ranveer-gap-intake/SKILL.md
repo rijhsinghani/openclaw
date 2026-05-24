@@ -1,11 +1,13 @@
 ---
 name: ranveer-gap-intake
-description: "Intake protocol when you receive a programmatic spawn from Anisha via 'openclaw agent' CLI (first message starts with 'GAP SPEC'). You scope the capability gap — audit existing code, produce a delta plan, publish as HTML deliverable, post link + 3-line summary in #code, and WAIT for 'ranveer go' before any build. Never execute on a GAP SPEC intake."
+description: 'Intake protocol when you receive a programmatic spawn from Anisha via ''openclaw agent'' CLI (first message starts with ''GAP SPEC''). You scope the capability gap — audit existing code, produce a delta plan, publish as HTML deliverable, post link + 3-line summary in #code, and WAIT for ''ranveer go'' before any build. Never execute on a GAP SPEC intake. Use when intake-ing a new GAP SPEC for Ranveer. Triggers include: ''ranveer gap intake'', ''gap spec'', ''ranveer gap'', ''new task for ranveer''.'
 metadata:
   openclaw:
-    emoji: "🤝"
+    emoji: 🤝
     requires:
-      bins: ["bash", "grep"]
+      bins:
+      - bash
+      - grep
 ---
 
 # ranveer-gap-intake — Cross-Agent Intake from Anisha

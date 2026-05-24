@@ -1,11 +1,16 @@
 ---
 name: ranveer-backlog-scan
-description: "Scan all managed repos (studio-os, investment-accounting, content-engine, .openclaw) for hardening work — dead code, ready-to-merge PRs, stale branches > 14 days, coverage gaps — and post a single briefing message to #code with the top proposal. Triggered by cron (ranveer-backlog-scan-am / -pm) or on-demand when Ranveer asks to run it."
+description: 'Scan all managed repos (studio-os, investment-accounting, content-engine, .openclaw) for hardening work — dead code, ready-to-merge PRs, stale branches > 14 days, coverage gaps — and post a single briefing message to #code with the top proposal. Triggered by cron (ranveer-backlog-scan-am / -pm) or on-demand when Ranveer asks to run it. Use when scanning Ranveer''s open backlog for next-best work. Triggers include: ''ranveer backlog scan'', ''backlog scan'', ''what is next for ranveer'', ''pick a backlog item''.'
 metadata:
   openclaw:
-    emoji: "🔍"
+    emoji: 🔍
     requires:
-      bins: ["bash", "gh", "git", "jq", "node"]
+      bins:
+      - bash
+      - gh
+      - git
+      - jq
+      - node
 ---
 
 # Ranveer Backlog Scan
@@ -58,10 +63,18 @@ After ranking but before writing the HTML brief, emit a JSONL file at
 Write **one JSON object per finding** (all findings, not just top-3), one per line, using this exact schema — no extra keys, no missing keys:
 
 ```json
-{"tier":"trivial","repo":"/abs/path/to/repo","path":"repo-relative/file.ext","category":"unused-import","description":"One-sentence summary of the issue","match":"optional symbol or pattern, empty string if N/A"}
+{
+  "tier": "trivial",
+  "repo": "/abs/path/to/repo",
+  "path": "repo-relative/file.ext",
+  "category": "unused-import",
+  "description": "One-sentence summary of the issue",
+  "match": "optional symbol or pattern, empty string if N/A"
+}
 ```
 
 Field rules:
+
 - `tier`: one of `trivial` | `small` | `medium` | `large`
   - **trivial**: single-file, purely mechanical (unused import, dead export, cosmetic lint) — zero API risk
   - **small**: 1–3 files, low blast radius, internal rename or simple refactor
@@ -90,20 +103,108 @@ Log the PID for traceability but do not wait for it. Continue immediately to wri
 
 ## Briefing message format
 
-Write HTML brief to `ranveer-reports-private/briefs/ranveer-backlog-<ISO-timestamp>.html`. Then post ONE Slack message to `#code` (channel `C0AM06M0JE8`).
+Post ONE Slack message to `#code` (channel `C0AM06M0JE8`). The message body IS the primary deliverable — it must stand on its own without any link.
 
-**Required format** — content lines first, then the interactive directive on its own line:
+### Inline body (mandatory, every tier)
+
+Every briefing MUST include, in the top-level Slack message itself:
+
+1. **Severity emoji counts** — one short line summarizing the scan, e.g. `🔴 0 critical · 🟡 2 medium · 🟢 7 trivial across 4 repos`.
+2. **Top 3 findings** — one line each, each containing:
+   - the repo name + repo-relative file path (e.g. `studio-os apps/client-portal/lib/utils.ts`)
+   - a 1-line plain-English description of the issue
+   - a 1-line plain-English action ("remove unused import", "delete dead export `foo()`", etc.)
+3. **Recommendation** — the single next step, in business English.
+
+### Tier-gated button emission — DECISION RULE
+
+The button directive is REQUIRED when ANY of these are true, and FORBIDDEN otherwise:
+
+- The severity line includes any 🔴 critical findings (`critical > 0`)
+- The severity line includes any 🟡 medium findings (`medium > 0`)
+- The top proposal's JSONL `tier` is `medium` or `large`
+
+If the severity line is 🔴 0 · 🟡 0 and the top proposal's tier is `trivial` or `small` → no buttons (auto-ship path).
+
+Severity-emoji ↔ tier mapping (use this — do not invent new severity names):
+
+- 🔴 critical ⇒ `tier=large` (architectural, auth, payment, DB migration, placeholder business logic)
+- 🟡 medium ⇒ `tier=medium` (multi-file refactor, API signature change, test restructure)
+- 🟢 trivial ⇒ `tier=trivial` OR `tier=small` (unused imports, dead exports, lint warnings, dep bumps, duplicate utils)
+
+Only these two output variants are allowed — no third variant.
+
+**Variant A — auto-ship (no buttons).** Use when 🔴=0 AND 🟡=0 AND top tier ∈ {trivial, small}:
+
+Ranveer dispatches the fix autonomously (`proactive-cleanup.sh` path — CodeRabbit-gated, CI-gated). The briefing message is a notification, not a gate.
 
 ```
-<inline summary: problem in 1-2 lines, recommendation in 1 line>
-approve to start the build, or skip to wait. [[slack_buttons: Approve:ranveer-go:primary, Skip:ranveer-skip]]
+<severity line>
+<top 3 findings, one per line>
+Auto-shipping the top finding now (trivial/small, safe-change path). Will reply in thread with PR link when CodeRabbit + CI are green.
 ```
 
-Rules:
-- **Inline summary mandatory** — Sameer doesn't open links, so the gist must be in the message body. A link to the HTML brief is OPTIONAL and supplemental, only if the proposal needs more detail than 3 lines.
-- **HEAD-check any URL** before posting. `gs://` is forbidden — must be HTTPS.
-- The `[[slack_buttons:]]` directive renders Block Kit buttons via OpenClaw's interactive replies feature. The `Approve:ranveer-go:primary` button click routes through bolt-app.ts → `handleRanveerGo` → `autonomous-batch.sh`. The text "ranveer go" reply still works as a fallback.
-- Thread replies are reserved for backlog items #2 and #3 on request.
+On merge, post a thread reply to the briefing: `✅ shipped PR #NNN — <1-line summary>`.
+
+**Variant B — approval required (Block Kit buttons mandatory).** Use when 🔴>0 OR 🟡>0 OR top tier ∈ {medium, large}:
+
+Emit the same inline summary in the streaming reply (for visibility), but the **authoritative Block Kit post with buttons** MUST be produced by `post-scan-result.sh`, not by the deprecated `[[slack_buttons: ...]]` directive. (Why: the directive only compiles through `slackOutbound.sendPayload` / `normalizePayload`, which Ranveer's scan replies bypass. Block Kit buttons never rendered for months until 2026-04-24 when the architectural path below was introduced.)
+
+Steps for Variant B:
+
+1. Write the scan summary JSON to `~/.openclaw/data/ranveer/scan-<ISO>.json` where `<ISO>` is `$(date -u +%Y-%m-%dT%H%M%SZ)`. Schema:
+
+   ```json
+   {
+     "scan_date": "2026-04-24",
+     "scan_id": "2026-04-24T123000Z",
+     "severity": { "critical": 0, "medium": 2, "trivial": 7 },
+     "repos_scanned": [
+       "studio-os",
+       "investment-accounting",
+       "content-engine",
+       ".openclaw"
+     ],
+     "top_findings": [
+       {
+         "tier": "medium",
+         "repo": "studio-os",
+         "path": "apps/client-portal/lib/utils.ts",
+         "description": "3 unused exports",
+         "action": "remove unused exports"
+       }
+     ],
+     "recommendation": "Approve to start the build, or Defer to skip this cycle.",
+     "requires_approval": true
+   }
+   ```
+
+2. Invoke the poster — blocking, exit code determines success:
+
+   ```bash
+   SCAN_JSON="$HOME/.openclaw/data/ranveer/scan-$(date -u +%Y-%m-%dT%H%M%SZ).json"
+   # (write $SCAN_JSON with the schema above)
+   bash "$HOME/.openclaw/agents/ranveer/scripts/post-scan-result.sh" "$SCAN_JSON"
+   ```
+
+3. The streaming inline reply (the skill's own LLM output) should still include the severity line + top 3 findings + recommendation for visibility. Do NOT include `[[slack_buttons: ...]]` — that directive is deprecated and renders as literal text.
+
+The inline streaming reply and the `post-scan-result.sh` Block Kit post are two messages: the first is the conversational reply (no buttons), the second is the authoritative decision-gate post with Approve/Defer buttons (`action_id`s `ranveer-go` / `ranveer-skip` registered in `openclaw.json` → `plugins.entries["slack-action-router"].config.handlers`).
+
+Self-check before completing: if the severity line contains 🔴 or 🟡 AND `post-scan-result.sh` exited non-zero (and not exit 3 which is the auto-ship signal), the skill run is INVALID — the approval gate did not post. Fail loudly; do NOT silently drop the gate.
+
+### Overflow
+
+- If the body exceeds ~3000 chars, post the severity line + top-3 top-level and put repo-by-repo detail as sequential thread replies.
+- An HTML brief at `ranveer-reports-private/briefs/...` MAY be generated for audit trail. It is NEVER the primary deliverable and its path is NEVER posted top-level.
+- If additional context genuinely cannot fit in threaded replies (rare — rendered HTML only), generate a 24h signed HTTPS URL via `gcloud storage sign-url <gs://...> --duration=24h` and post the HTTPS URL. NEVER the raw `gs://` URI.
+
+### Hard rules on URLs
+
+- `gs://` is forbidden in any Slack message, top-level or thread, regardless of context. Rule B of SOUL.md governs.
+- HTTPS URLs must be HEAD-checked (200 response) before posting.
+- Block Kit Approve/Defer buttons are posted by `post-scan-result.sh` (see Variant B above), NOT by the deprecated `[[slack_buttons:]]` directive. The button click flows through the gateway's `slack-action-router` (configured in `openclaw.json`) → spawns `openclaw agent --agent ranveer --message <autonomous-batch prompt>`. The text "ranveer go" reply still works as a fallback for channels where the buttons didn't render.
+- Thread replies are reserved for findings #2+ on request, and for the `✅ shipped PR #NNN` confirmation on auto-ship.
 
 ## Hard rules
 

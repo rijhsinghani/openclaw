@@ -1,11 +1,14 @@
 ---
 name: soul-linter
-description: "Structural lint for OpenClaw agent SOUL.md files. Detects attention-decay failure modes: size bloat, misplaced critical keywords, rule-density drop, and duplication. Call before committing any SOUL.md / HEARTBEAT.md change. Pure bash + python3, sub-second, no LLM call."
+description: 'Structural lint for OpenClaw agent SOUL.md files. Detects attention-decay failure modes: size bloat, misplaced critical keywords, rule-density drop, and duplication. Call before committing any SOUL.md / HEARTBEAT.md change. Pure bash + python3, sub-second, no LLM call. Use when linting a SOUL.md file for an OpenClaw agent. Triggers include: ''soul lint'', ''soul linter'', ''check the soul.md'', ''lint soul''.'
 metadata:
   openclaw:
-    emoji: "🧭"
+    emoji: 🧭
     requires:
-      bins: ["bash", "python3", "awk"]
+      bins:
+      - bash
+      - python3
+      - awk
 ---
 
 # soul-linter

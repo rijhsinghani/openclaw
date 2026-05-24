@@ -1,11 +1,13 @@
 ---
 name: ranveer-task-spec
-description: "Full task spec JSON schema and dispatch flow for Codex code changes. Use EVERY time you need to edit source code: write the spec to data/state/task-specs/, run dispatch-codex.sh (or dispatch-codex-detached.sh for long tasks), parse exit codes, report to Slack. Covers tier-3 forbidden paths, acceptance criteria, max_duration_seconds, dry_run flag, and exit code semantics."
+description: 'Full task spec JSON schema and dispatch flow for Codex code changes. Use EVERY time you need to edit source code: write the spec to data/state/task-specs/, run dispatch-codex.sh (or dispatch-codex-detached.sh for long tasks), parse exit codes, report to Slack. Covers tier-3 forbidden paths, acceptance criteria, max_duration_seconds, dry_run flag, and exit code semantics. Use when shaping a task spec for Ranveer to execute. Triggers include: ''ranveer task spec'', ''task spec'', ''shape this for ranveer'', ''spec the task''.'
 metadata:
   openclaw:
-    emoji: "🔧"
+    emoji: 🔧
     requires:
-      bins: ["bash", "jq"]
+      bins:
+      - bash
+      - jq
 ---
 
 # ranveer-task-spec — Codex Dispatch Contract
